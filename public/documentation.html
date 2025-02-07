@@ -11,7 +11,88 @@
             <h1>Documentation</h1>
         </header>
         <main>
-            <p>This will be my attempt at a basic API for my class project. Currently, it will return a list of my top ten favorite films by browsing localhost:8080/movies</p>
+            <p>
+                This is a simple API that allows users to view, create, update, and delete movies. The API is RESTful and uses the following endpoints:
+            </p>
+            <table style="width:100%">
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                    <th>Request Body</th>
+                    <th>Response Body</th>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/movies</td>
+                    <td>Returns all movies in the database</td>
+                    <td>None</td>
+                    <td>A list of all movies in the database in a JSON format.</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/movies/[title]</td>
+                    <td>Returns a single movie</td>
+                    <td>None</td>
+                    <td>A single movie in the database in a JSON format.</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/movies/genre/[genre]</td>
+                    <td>Returns all movies in a single genre</td>
+                    <td>None</td>
+                    <td>A list of all movies of the selected genre in the database in a JSON format.</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/movies/director/[director]</td>
+                    <td>Returns all movies by a single director</td>
+                    <td>None</td>
+                    <td>A list of all movies by the selected director in the database in a JSON format.</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/users</td>
+                    <td>Returns all users in the database</td>
+                    <td>None</td>
+                    <td>A list of all users in the database in a JSON format.</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/movies</td>
+                    <td>Add to the list of movies</td>
+                    <td>{"title": "[Enter title here]", "director": "[Enter director here]", "genre": "[Enter primary genre here]", "year": "[Enter year of release here]" }</td>
+                    <td>A JSON object with the movie added to the list</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/users</td>
+                    <td>Register a new user</td>
+                    <td>{"username": "[Enter name here]" }</td>
+                    <td>A JSON object with the username entered</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>/users/[username]</td>
+                    <td>Update a user's username</td>
+                    <td>{"username": "[Enter name here]" }</td>
+                    <td>User updated.</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/list[title]</td>
+                    <td>Delete a movie from your list</td>
+                    <td>None</td>
+                    <td>Movie deleted.</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/user[username]</td>
+                    <td>Delete a user</td>
+                    <td>None</td>
+                    <td>User deleted.</td>
+                </tr>
+            </table>
         </main>
         <footer>
             <p>Patrick Kernan, 2025</p>

@@ -12,7 +12,7 @@
         </header>
         <main>
             <p>
-                This is a simple API that allows users to view, create, update, and delete movies. The API is RESTful and uses the following endpoints:
+                This is a simple API that allows users to view, create, update, and delete movies. Use the following endpoints:
             </p>
             <table style="width:100%">
                 <tr>
@@ -58,29 +58,43 @@
                     <td>A list of all users in the database in a JSON format.</td>
                 </tr>
                 <tr>
+                    <td>GET</td>
+                    <td>/users/[username]</td>
+                    <td>Returns a single user</td>
+                    <td>None</td>
+                    <td>A single user in the database in a JSON format.</td>
+                <tr>
                     <td>POST</td>
                     <td>/movies</td>
                     <td>Add to the list of movies</td>
-                    <td>{"title": "[Enter title here]", "director": "[Enter director here]", "genre": "[Enter primary genre here]", "year": "[Enter year of release here]" }</td>
+                    <td>{ "Title": "[Enter title here]", "Director": "[Enter director here]", "Genre": "[Enter primary genre here]", "Year": "[Enter year of release here]" }</td>
                     <td>A JSON object with the movie added to the list</td>
+                </tr>
                 </tr>
                 <tr>
                     <td>POST</td>
                     <td>/users</td>
                     <td>Register a new user</td>
-                    <td>{"username": "[Enter name here]" }</td>
-                    <td>A JSON object with the username entered</td>
+                    <td>{"Username": "[Enter name here]", "Password": "[Enter password here]", "Email": "[Enter email here]", "Birthday": "[Enter as a date (YYYY-MM-DD)]" }</td>
+                    <td>A JSON object with the user entered</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/users/[username]/movies/[movieid]</td>
+                    <td>Add a movie to your list</td>
+                    <td>None</td>
+                    <td>Movie added to your list.</td>
                 </tr>
                 <tr>
                     <td>PUT</td>
                     <td>/users/[username]</td>
-                    <td>Update a user's username</td>
-                    <td>{"username": "[Enter name here]" }</td>
+                    <td>Update a user's information</td>
+                    <td>{"[Put object to update here]": "[Enter updated information here]" }</td>
                     <td>User updated.</td>
                 </tr>
                 <tr>
                     <td>DELETE</td>
-                    <td>/list[title]</td>
+                    <td>/[username]/movies/[movieid]</td>
                     <td>Delete a movie from your list</td>
                     <td>None</td>
                     <td>Movie deleted.</td>

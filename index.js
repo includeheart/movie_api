@@ -8,7 +8,22 @@ const express = require('express'),
     mongoose = require('mongoose'),
     models = require('./models.js'),
     Movies = models.Movie,
-    Users = models.User;
+    Users = models.User,
+    cors = require('cors'),
+    { check, validationResult } = require('express-validator');
+
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1) {
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 const app = express();
 
@@ -113,7 +128,17 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), as
     });
 });
 
-app.post('/users', async (req, res) => {
+app.post('/users', [ 
+  check('Username', 'Username is required').isLength({min5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+], async (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
     await Users.findOne({ Username: req.body.username })
       .then((user) => {
         if (user) {
@@ -122,7 +147,7 @@ app.post('/users', async (req, res) => {
           Users
             .create({
               Username: req.body.Username,
-              Password: req.body.Password,
+              Password: hashedPassword,
               Email: req.body.Email,
               Birthday: req.body.Birthday
             })
@@ -139,7 +164,12 @@ app.post('/users', async (req, res) => {
       });
 });
 
-app.post('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/movies', [
+    check('Title', 'Title is required').isLength({min: 1}),
+    check('Description', 'Description is required').isLength({min: 1}),
+    check('Genre', 'Genre is required').isLength({min: 1}),
+    check('Director', 'Director is required').isLength({min: 1})
+], passport.authenticate('jwt', { session: false }), async (req, res) => {
     const { Title, Description, Genre, Director } = req.body;
     try {
         const existingMovie = await Movies.findOne({ Title });
@@ -160,7 +190,11 @@ app.post('/movies', passport.authenticate('jwt', { session: false }), async (req
     }
 });
 
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/users/:Username/movies/:MovieID', [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Users.findOneAndUpdate({ Username: req.params.Username }, {
        $push: { FavoriteMovies: req.params.MovieID }
      },
@@ -259,6 +293,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+
+app.listen(port, '0.0.0.0', () => {
+    console.log('Your app is listening on port ' + port);
 });

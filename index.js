@@ -12,6 +12,8 @@ const express = require('express'),
     cors = require('cors'),
     { check, validationResult } = require('express-validator');
 
+const app = express();
+
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 
 app.use(cors({
@@ -24,8 +26,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
-const app = express();
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 

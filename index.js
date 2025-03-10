@@ -27,6 +27,8 @@ app.use(cors({
   }
 }));
 
+let auth = require('./auth')(app);
+
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -44,8 +46,6 @@ app.use(morgan('common'));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-let auth = require('./auth')(app);
 
 const passport = require('passport');
 require('./passport');

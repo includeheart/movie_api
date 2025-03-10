@@ -10,7 +10,8 @@ const express = require('express'),
     Movies = models.Movie,
     Users = models.User,
     cors = require('cors'),
-    { check, validationResult } = require('express-validator');
+    { check, validationResult } = require('express-validator'),
+    generateJWTToken = require('./auth');
 
 const app = express();
 
@@ -26,8 +27,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
-let auth = require('./auth')(app);
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
@@ -49,6 +48,8 @@ app.use(bodyParser.urlencoded({
 
 const passport = require('passport');
 require('./passport');
+
+let auth = require('./auth')(app);
 
 app.get('/', (req, res) => {
     res.send('Welcome to my movie site!');
@@ -126,6 +127,32 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), as
         console.error(err);
         res.status(500).send('Error: ' + err);
     });
+});
+
+app.post('/login', [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty()
+], (req, res) => {
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  passport.authenticate('local', { session: false }, (error, user, info) => {
+    if (error || !user) {
+      return res.status(400).json({
+        message: 'Something is not right',
+        user: user
+      });
+    }
+    req.login(user, { session: false }, (error) => {
+      if (error) {
+        res.send(error);
+      }
+      let token = generateJWTToken(user.toJSON());
+      return res.json({ user, token });
+    });
+  })(req, res);
 });
 
 app.post('/users', [ 

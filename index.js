@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to my movie site!');
 });
   
-app.get ('/movies'), async (req, res) => {
+app.get('/movies', async (req, res) => {
     await Movies.find()
     .then((movies) => {
         res.status(201).json(movies);

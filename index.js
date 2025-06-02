@@ -15,7 +15,7 @@ const express = require('express'),
 
 const app = express();
 
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://patrick-myflix.netlify.app'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://patrick-myflix.netlify.app', 'http://localhost:4200'];
 
 app.use(cors({
   origin: (origin, callback) => {

@@ -24,5 +24,7 @@ For detailed code-level documentation, see the [JSDoc Documentation](out/index.h
    npm install
 2. Set up your MongoDB connection string in your environmental variables.
 3. Start the server:
+    ```sh
     npm start
+
 Author: Patrick Kernan, 2025
